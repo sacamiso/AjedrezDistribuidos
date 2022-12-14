@@ -29,6 +29,9 @@ public class Controlador implements ActionListener {
     Movimientos movimientos;
     Bot bot = new Bot();
 
+    
+    
+    
     public Controlador() {
         iniciarTablero();
         VistaTablero vista = new VistaTablero();
