@@ -1,50 +1,40 @@
 
 package Main;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
+import AjedrezAplicacion.*;
 
 public class Main {
 
     private static int Numfilas = 8;
+    private static Component comp;
+    private static Component[][] botones;
 
     public static void main(String[] args) {
-        JFrame Ventana = new JFrame("Tablero de Ajedrez");
-        Ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Ventana.setLayout(new GridLayout(1, 1));
-        JPanel PanelTableroAjedrez = TableroAjedrez();
-        Ventana.add(PanelTableroAjedrez);
 
-        Ventana.setLocationRelativeTo(null);
-        Ventana.setPreferredSize(new Dimension(500, 500));
-        Ventana.pack();
-        Ventana.setVisible(true);
-        Ventana.remove(PanelTableroAjedrez);
-        PanelTableroAjedrez = TableroAjedrez2();
-        Ventana.add(PanelTableroAjedrez);
+        TableroIG tab = new TableroIG();
+        // botones = new Component[8][8];
+        
+        // JFrame Ventana = new JFrame("Tablero de Ajedrez");
+        // Ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // JPanel PanelTableroAjedrez = TableroAjedrez2();
+        // comp = PanelTableroAjedrez;
+        // Ventana.setLayout(new GridLayout(1, 1));
+        
+        // Ventana.add(comp);
 
-        while (true) {
-            Scanner sc = new Scanner(System.in);
-            int i = sc.nextInt();
-            Ventana.remove(PanelTableroAjedrez);
-            if (i % 2 == 0) {
-                PanelTableroAjedrez = TableroAjedrez();
-            } else {
-                PanelTableroAjedrez = TableroAjedrez2();
-            }
-
-            Ventana.add(PanelTableroAjedrez);
-
-        }
+        // Ventana.setLocationRelativeTo(null);
+        // Ventana.setPreferredSize(new Dimension(1000, 1000));
+        // Ventana.pack();
+        // Ventana.setVisible(true);
+        
+        // actualizar(Ventana);
+        
     }
 
     // (Controlador controlador = new Controlador();
@@ -82,6 +72,8 @@ public class Main {
     public static JPanel TableroAjedrez() {
         JPanel PanelTableroAjedrez = new JPanel();
         String[][] Casillas = new String[8][8];
+
+        
         for (int y = 0; y < Casillas.length; y++) {
             for (int x = 0; x < Casillas[y].length; x++) {
                 // en lugar de hacer el add a new JButton
@@ -92,28 +84,30 @@ public class Main {
                 PanelTableroAjedrez.add(jButton);
                 if ((y + x + 1) % 2 == 0) {
                     // al botón le pones el color negro como en tu condición
-                    jButton.setBackground(Color.BLACK);
+                    
+                    jButton.setBackground(new Color(185,122,87));
                 } else {
                     // o le pones el color blanco aquí tu logica es practicamente la misma
-                    jButton.setBackground(Color.WHITE);
+                    jButton.setBackground(new Color(228,205,190));
                 }
 
                 ImageIcon imag = new ImageIcon(
-                        "C:/Users/fidel/AjedrezDistribuidos/AjedrezDistribuidos-1/AjedrezDistribuidos/src/Imagenes/Alfil.png");
+                        "C:/Users/fidel/AjedrezDistribuidos/AjedrezDistribuidos-1/AjedrezDistribuidos/src/Imagenes/Reina.png");
 
-                int ancho = 50;
-                int alto = 50;
+                int ancho = 85;
+                int alto = 85;
 
                 ImageIcon imag2 = new ImageIcon(imag.getImage().getScaledInstance(ancho, alto, Image.SCALE_DEFAULT));
 
                 jButton.setIcon(imag2);
             }
         }
-
+        
         PanelTableroAjedrez.setLayout(new GridLayout(8, 8));
 
         return PanelTableroAjedrez;
     }
+
 
     public static JPanel TableroAjedrez2() {
         JPanel PanelTableroAjedrez = new JPanel();
@@ -137,8 +131,8 @@ public class Main {
                 ImageIcon imag = new ImageIcon(
                         "C:/Users/fidel/AjedrezDistribuidos/AjedrezDistribuidos-1/AjedrezDistribuidos/src/Imagenes/AlfilNegro.png");
 
-                int ancho = 50;
-                int alto = 50;
+                int ancho = 85;
+                int alto = 85;
 
                 ImageIcon imag2 = new ImageIcon(imag.getImage().getScaledInstance(ancho, alto, Image.SCALE_DEFAULT));
 
@@ -149,6 +143,22 @@ public class Main {
         PanelTableroAjedrez.setLayout(new GridLayout(8, 8));
 
         return PanelTableroAjedrez;
+    }
+
+    public static void actualizar(JFrame ventana){
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            int i = sc.nextInt();
+            ventana.remove(comp);
+            if (i % 2 == 0) {
+                comp = TableroAjedrez();
+            } else {
+                comp = TableroAjedrez2();
+            }
+
+            ventana.add(comp);
+
+        }
     }
 
 }
