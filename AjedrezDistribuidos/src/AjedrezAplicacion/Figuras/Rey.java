@@ -9,9 +9,10 @@ public class Rey implements Pieza{
     }
 
     @Override
-    public boolean movimientoValido(int[] actual, int[] futuro) {
+    public boolean movimientoValido(int x0, int y0, int x1, int y1) {
         // TODO Auto-generated method stub
         return false;
     }
 
+    
 }
