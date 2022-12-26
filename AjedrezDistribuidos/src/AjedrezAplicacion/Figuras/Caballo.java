@@ -8,8 +8,8 @@ public class Caballo  implements Pieza{
         this.nombre = nombre;
     }
 
-    //UN CABALHOOOOOOOOOOOOOOO
-    
+
+
     public Caballo(){}
 
     @Override
