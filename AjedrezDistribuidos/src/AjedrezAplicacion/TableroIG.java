@@ -1,14 +1,12 @@
 package AjedrezAplicacion;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import javax.swing.*;
+import java.awt.event.*;
 
-import AjedrezAplicacion.Figuras.*;
+import AjedrezAplicacion.Figuras.Pieza;
 
-public class TableroIG {
+public class TableroIG implements ActionListener{
     private JFrame interfaz;
 
     private static Component comp;
@@ -62,6 +60,7 @@ public class TableroIG {
             for (int j = 0; j < 8; j++) {
 
                 botones[i][j] = new JButton();
+                botones[i][j].addActionListener(this);
 
                 if ((i + j + 1) % 2 == 0) {
                     // al botón le pones el color negro como en tu condición
@@ -223,6 +222,12 @@ public class TableroIG {
         // Ahora creamos las piezas en si mismas y las añadimos a la matriz de las
         // mismas.
 
+        this.piezas = new Pieza[8][8];
+
+        
+
+
+
         System.out.println(botones[0][3].getX());
         System.out.println(botones[0][4].getX());
         System.out.println(botones[0][5].getX());
@@ -231,8 +236,9 @@ public class TableroIG {
     }
 
     // INDICA SI UNA CASILLA YA ESTA OCUPADA POR OTRA FICHA
-    public boolean estaOcupado(JButton boton) {
-        return false;
+    public boolean estaOcupado(int x, int y) {
+
+        return (!this.piezas[x][y].equals(null));
     }
 
     // INDICA SI UNA CASILLA YA HA SIDO SELECCIONADA
@@ -263,7 +269,26 @@ public class TableroIG {
         this.setComp(nuevoTablero.getComp());
         this.interfaz.add(comp);
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        int i = 0;
+        int j = 0;
+        while(i < 8 && !botones[i][j].isSelected()) {
+            while(j < 8 && !botones[i][j].isSelected()) {
+                j++;
+            }
+            i++;
+        }
+        e.
+        
+    }
+
+    
 }
+
+
 //Y = Fila   X = Columna
 // 0 = 0
 // 1 = 123
