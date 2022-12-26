@@ -58,6 +58,9 @@ public class Cliente {
 							tablero = (TableroIG) ois.readObject();
 							mioTab.actualizarTablero(tablero);
 							// Hace cosas
+							while(mioTab.getTurno().equals("Negro")){
+
+							}
 							oos.writeObject(mioTab);
 						}
 
@@ -87,6 +90,9 @@ public class Cliente {
 				TableroIG tablero;
 				while (partidaTrminada == false) {
 					// Hace cosas
+					while(mioTab.getTurno().equals("Blanco")){
+
+					}
 					oos.writeObject(mioTab);
 					tablero = (TableroIG) ois.readObject();
 					mioTab.actualizarTablero(tablero);
