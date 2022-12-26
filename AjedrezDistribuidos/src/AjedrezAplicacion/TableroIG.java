@@ -235,6 +235,10 @@ public class TableroIG implements ActionListener{
         System.out.println(botones[0][7].getX());
     }
 
+    public String getTurno() {
+        return turno;
+    }
+
     // INDICA SI UNA CASILLA YA ESTA OCUPADA POR OTRA FICHA
     public boolean estaOcupado(int x, int y) {
 
