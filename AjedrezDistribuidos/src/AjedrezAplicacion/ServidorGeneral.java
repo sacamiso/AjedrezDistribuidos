@@ -1,5 +1,6 @@
 package AjedrezAplicacion;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,7 +11,6 @@ import java.util.concurrent.Executors;
 public class ServidorGeneral {
 	public static void main(String[] args) {
 
-		int numPet = 0;
 		HashMap<String, Integer> listaUsuarios = new HashMap<String, Integer>();
 
 		ExecutorService pool = Executors.newCachedThreadPool();
@@ -19,16 +19,14 @@ public class ServidorGeneral {
 				try {
 
 					Socket s = ss.accept();
-					numPet++;
-					System.out.println("Peticion numero = " + numPet);
-
-					if (!listaUsuarios.containsKey(s.getInetAddress().getHostAddress())) {
-						listaUsuarios.put(s.getInetAddress().getHostAddress(), s.getPort());
+					DataInputStream dis = new DataInputStream(s.getInputStream());
+					int puerto = dis.readInt();
+					if(!listaUsuarios.containsKey(s.getInetAddress().getHostAddress())) {
+						listaUsuarios.put(s.getInetAddress().getHostAddress(), puerto);
 					}
-
-					AtenderJugador hilo = new AtenderJugador(s, listaUsuarios);
+					
+					Atender hilo = new Atender(s,listaUsuarios);
 					pool.execute(hilo);
-					System.out.println("Final peticion " + numPet);
 
 				} catch (IOException e) {
 					e.printStackTrace();
