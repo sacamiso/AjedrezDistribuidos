@@ -35,6 +35,11 @@ public class TableroIG implements ActionListener {
     private boolean enroqueDerechaNegras;
     private boolean enroqueIzquierdaBlancas;
 
+    private int tamY;
+    private int tamX;
+    private int diffTamY;
+    private int diffTamX;
+
     public TableroIG(String player) {
         // Empiezan jugando las blancas
         turno = "Blanco";
@@ -254,7 +259,7 @@ public class TableroIG implements ActionListener {
         interfaz.setResizable(false);
         interfaz.pack();
         interfaz.setVisible(true);
-
+        resolverTamaños();
         // Ahora creamos las piezas en si mismas y las añadimos a la matriz de las
         // mismas.
 
@@ -325,7 +330,7 @@ public class TableroIG implements ActionListener {
     }
 
     private String getBotonPosicionString(JButton boton) {
-        String dev = "" + (boton.getY() / 70) + (boton.getX() / 73);
+        String dev = "" + ((boton.getY()-this.diffTamY) / this.tamY) + ((boton.getX() - this.diffTamX) / this.tamX);
         return dev;
     }
 
@@ -1447,5 +1452,16 @@ public class TableroIG implements ActionListener {
         for (Component a: this.panel.getComponents()){
             a.setEnabled(true);
         }
+    }
+
+    public void resolverTamaños(){
+        
+        //Tamaño Y
+        this.diffTamY= botones[0][0].getY();
+        this.tamY = botones[1][0].getY() -botones[0][0].getY();
+
+        //Tamaño X
+        this.diffTamX= botones[0][0].getY();
+        this.tamX = botones[0][1].getY() -botones[0][0].getY();
     }
 }
