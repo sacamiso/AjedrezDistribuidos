@@ -1461,7 +1461,7 @@ public class TableroIG implements ActionListener {
         this.tamY = botones[1][0].getY() -botones[0][0].getY();
 
         //Tamaño X
-        this.diffTamX= botones[0][0].getY();
-        this.tamX = botones[0][1].getY() -botones[0][0].getY();
+        this.diffTamX= botones[0][0].getX();
+        this.tamX = botones[0][1].getX() - botones[0][0].getX();
     }
 }
