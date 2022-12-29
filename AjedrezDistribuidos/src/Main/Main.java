@@ -17,7 +17,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-        TableroIG tab = new TableroIG();
+        TableroIG tab = new TableroIG("Blanco");
         // botones = new Component[8][8];
         
         // JFrame Ventana = new JFrame("Tablero de Ajedrez");

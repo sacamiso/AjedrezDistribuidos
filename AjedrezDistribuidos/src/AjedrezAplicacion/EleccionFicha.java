@@ -66,7 +66,7 @@ public class EleccionFicha extends javax.swing.JDialog {
         if (this.color.equals("Blanco")) {
             jButton4.setIcon(new javax.swing.ImageIcon("AjedrezDistribuidos/src/Imagenes/Torre.png")); 
         } else {
-            jButton4.setIcon(new javax.swing.ImageIcon("AjedrezDistribuidos/src/Imagenes/TorreNegro.png"));
+            jButton4.setIcon(new javax.swing.ImageIcon("AjedrezDistribuidos/src/Imagenes/TorreNegra.png"));
         }
 
         jButton4.addActionListener(new java.awt.event.ActionListener() {

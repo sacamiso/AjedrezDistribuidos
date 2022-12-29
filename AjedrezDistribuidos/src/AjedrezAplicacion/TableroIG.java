@@ -3,16 +3,18 @@ package AjedrezAplicacion;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Scanner;
 
 public class TableroIG implements ActionListener {
     private JFrame interfaz;
-
+    private JPanel panel;
     private static Component comp;
 
     private JButton[][] botones;
     private Pieza[][] piezas;
     private Pieza[][] piezasFuturas;
     private String turno;
+    private String jugador;
 
     private boolean enroqueNegras;
     private boolean enroqueBlancas;
@@ -33,10 +35,10 @@ public class TableroIG implements ActionListener {
     private boolean enroqueDerechaNegras;
     private boolean enroqueIzquierdaBlancas;
 
-    public TableroIG() {
+    public TableroIG(String player) {
         // Empiezan jugando las blancas
         turno = "Blanco";
-
+        jugador = player;
         // Situamos condiciones iniciales:
         // Blancas y negras pueden hacer enroque
         // Los reyes ni las torres no se han movido
@@ -238,7 +240,7 @@ public class TableroIG implements ActionListener {
 
         tableroOriginal.setLayout(new GridLayout(8, 8));
         comp = tableroOriginal;
-
+        panel = tableroOriginal;
         // PASO 4.Iniciamos la interfaz
         interfaz = new JFrame("Tablero de Ajedrez");
         interfaz.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -249,6 +251,7 @@ public class TableroIG implements ActionListener {
 
         interfaz.setLocationRelativeTo(null);
         interfaz.setPreferredSize(new Dimension(1000, 1000));
+        interfaz.setResizable(false);
         interfaz.pack();
         interfaz.setVisible(true);
 
@@ -286,6 +289,7 @@ public class TableroIG implements ActionListener {
     // ACTUALIZAMOS EL TABLERO
     public void actualizarTablero(TableroIG nuevoTablero) {
         this.interfaz.remove(comp);
+        this.panel = (JPanel) nuevoTablero.getComp();
         this.setComp(nuevoTablero.getComp());
         this.interfaz.add(comp);
     }
@@ -313,6 +317,8 @@ public class TableroIG implements ActionListener {
                 } else {
                     this.turno = "Blanco";
                 }
+                //bloquear();              
+                
             }
         }
 
@@ -434,14 +440,14 @@ public class TableroIG implements ActionListener {
     }
 
     private void comprobarJaqueMate(){
-        boolean jaqueMate = true;
+        this.jaqueMate = true;
         for(int i = 0;i<8;i++){
             for(int j = 0;j<8;j++){
                 String posicion = ""+i+""+j;
                 if(colorFichaDeLaCasilla(this.piezas, i, j).equals(this.turno)){
                     String[] movimientosF = movimientosModificados(this.piezas, posicion);
                     if(movimientosF!=null && !movimientosF[0].equals("")){
-                        jaqueMate = false;
+                        this.jaqueMate = false;
                         break;
                     }
                 }
@@ -943,7 +949,7 @@ public class TableroIG implements ActionListener {
                     tableroM[yFinal][xFinal] = tableroM[yInicial][xInicial];
                     tableroM[yInicial][xInicial] = new Pieza("Vacio","Neutro");
 
-                    if (reyEnJaque(colorFichaDeLaCasilla(this.piezas, yInicial, xInicial)) == false) {
+                    if (reyEnJaque(colorFichaDeLaCasilla(this.piezas, yInicial, xInicial), tableroM) == false) {
                         posicionesDefinitivas += "" + yFinal + "" + xFinal + "_";
                     }
 
@@ -966,18 +972,18 @@ public class TableroIG implements ActionListener {
         }
     }
 
-    private boolean reyEnJaque(String color) {
+    private boolean reyEnJaque(String color, Pieza[][] tablero) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (fichaDeLaCasilla(this.piezas, i, j).equals("Rey")
-                        && colorFichaDeLaCasilla(this.piezas, i, j).equals(color)) {
+                if (fichaDeLaCasilla(tablero, i, j).equals("Rey")
+                        && colorFichaDeLaCasilla(tablero, i, j).equals(color)) {
                     String posicionRey = "" + i + "" + j;
                     String[] movimientosEnemigos;
 
                     if (color.equals("Blanco")) {
-                        movimientosEnemigos = todosLosMovimientosFichas("Negro");
+                        movimientosEnemigos = todosLosMovimientosFichas("Negro", tablero);
                     } else {
-                        movimientosEnemigos = todosLosMovimientosFichas("Blanco");
+                        movimientosEnemigos = todosLosMovimientosFichas("Blanco", tablero);
                     }
 
                     for (int x = 0; x < movimientosEnemigos.length; x++) {
@@ -993,26 +999,26 @@ public class TableroIG implements ActionListener {
         return false;
     }
 
-    public String[] todosLosMovimientosFichas(String color) {
+    public String[] todosLosMovimientosFichas(String color, Pieza[][] tablero) {
 
         String posicionesTotales = "";
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                String ficha = fichaDeLaCasilla(this.piezas, i, j);
-                String colorFich = colorFichaDeLaCasilla(this.piezas, i, j);
+                String ficha = fichaDeLaCasilla(tablero, i, j);
+                String colorFich = colorFichaDeLaCasilla(tablero, i, j);
                 if (ficha.equals("Torre") && colorFich.equals(color)) {
-                    posicionesTotales += transformarApalabra(movimientoTorreSoloAtaque(this.piezas, i, j, color));
+                    posicionesTotales += transformarApalabra(movimientoTorreSoloAtaque(tablero, i, j, color));
                 } else if (ficha.equals("Alfil") && colorFich.equals(color)) {
-                    posicionesTotales += transformarApalabra(movimientoAlfilSoloAtaque(this.piezas, i, j, color));
+                    posicionesTotales += transformarApalabra(movimientoAlfilSoloAtaque(tablero, i, j, color));
                 } else if (ficha.equals("Reina") && colorFich.equals(color)) {
-                    posicionesTotales += transformarApalabra(movimientoReinaSoloAtaque(this.piezas, i, j, color));
+                    posicionesTotales += transformarApalabra(movimientoReinaSoloAtaque(tablero, i, j, color));
                 } else if (ficha.equals("Caballo") && colorFich.equals(color)) {
-                    posicionesTotales += transformarApalabra(movimientoCaballoSoloAtaque(this.piezas, i, j, color));
+                    posicionesTotales += transformarApalabra(movimientoCaballoSoloAtaque(tablero, i, j, color));
                 } else if (ficha.equals("Rey") && colorFich.equals(color)) {
-                    posicionesTotales += transformarApalabra(movimientoReySoloAtaque(this.piezas, i, j, color));
+                    posicionesTotales += transformarApalabra(movimientoReySoloAtaque(tablero, i, j, color));
                 } else if (ficha.equals("Peon") && colorFich.equals(color)) {
-                    posicionesTotales += transformarApalabra(movimientoPeonSoloAtaque(this.piezas, i, j, color));
+                    posicionesTotales += transformarApalabra(movimientoPeonSoloAtaque(tablero, i, j, color));
                 }
 
             }
@@ -1052,7 +1058,7 @@ public class TableroIG implements ActionListener {
             i++;
 
             try {
-                if (tableroM[i][x].equals(null)) {
+                if (tableroM[i][x].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + i + x + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, i, x).equals(color)) {
                     posicionesPosibles += "" + i + x + "_";
@@ -1074,7 +1080,7 @@ public class TableroIG implements ActionListener {
             i--;
 
             try {
-                if (tableroM[i][x].equals(null)) {
+                if (tableroM[i][x].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + i + x + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, i, x).equals(color)) {
                     posicionesPosibles += "" + i + x + "_";
@@ -1096,7 +1102,7 @@ public class TableroIG implements ActionListener {
             i--;
 
             try {
-                if (tableroM[y][i].equals(null)) {
+                if (tableroM[y][i].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + y + i + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, y, i).equals(color)) {
                     posicionesPosibles += "" + y + i + "_";
@@ -1118,7 +1124,7 @@ public class TableroIG implements ActionListener {
             i++;
 
             try {
-                if (tableroM[y][i].equals(null)) {
+                if (tableroM[y][i].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + y + i + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, y, i).equals(color)) {
                     posicionesPosibles += "" + y + i + "_";
@@ -1148,7 +1154,7 @@ public class TableroIG implements ActionListener {
         do {
             i++;
             try {
-                if (tableroM[y + i][x + i].equals(null)) {
+                if (tableroM[y + i][x + i].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + (y + i) + "" + (x + i) + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, y + i, x + i).equals(color)) {
                     posicionesPosibles += "" + (y + i) + "" + (x + i) + "_";
@@ -1168,7 +1174,7 @@ public class TableroIG implements ActionListener {
         do {
             i--;
             try {
-                if (tableroM[y + i][x + i].equals(null)) {
+                if (tableroM[y + i][x + i].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + (y + i) + "" + (x + i) + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, y + i, x + i).equals(color)) {
                     posicionesPosibles += "" + (y + i) + "" + (x + i) + "_";
@@ -1188,7 +1194,7 @@ public class TableroIG implements ActionListener {
         do {
             i++;
             try {
-                if (tableroM[y - i][x + i].equals(null)) {
+                if (tableroM[y - i][x + i].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + (y - i) + "" + (x + i) + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, y - i, x + i).equals(color)) {
                     posicionesPosibles += "" + (y - i) + "" + (x + i) + "_";
@@ -1208,7 +1214,7 @@ public class TableroIG implements ActionListener {
         do {
             i--;
             try {
-                if (tableroM[y - i][x + i].equals(null)) {
+                if (tableroM[y - i][x + i].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + (y - i) + "" + (x + i) + "_";
                 } else if (!colorFichaDeLaCasilla(tableroM, y + i, x + i).equals(color)) {
                     posicionesPosibles += "" + (y - i) + "" + (x + i) + "_";
@@ -1431,4 +1437,15 @@ public class TableroIG implements ActionListener {
         return arrayPosicionesPosibles;
     }
 
+    private void bloquear(){
+        for (Component a: this.panel.getComponents()){
+            a.setEnabled(false);
+        }
+    }
+
+    public void desbloquear(){
+        for (Component a: this.panel.getComponents()){
+            a.setEnabled(true);
+        }
+    }
 }
