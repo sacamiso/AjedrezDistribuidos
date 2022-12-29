@@ -43,30 +43,29 @@ public class Cliente {
 		System.out.println(
 				"Si desea esperar a que alguien le solicite una partida pulse 1 y si desea jugar con un usuario conectado concreto pulse 2: ");
 		int opcion = entrada.nextInt();
-		TableroIG mioTab = new TableroIG();
+
 		if (opcion == 1) {
 
 			try (ServerSocket ss = new ServerSocket(puerto1);) {
-				try {
-					Socket s = ss.accept();
 
-					try (ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-							ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream())) {
-						boolean partidaTrminada = false;
-						TableroIG tablero;
-						while (partidaTrminada == false) {
-							tablero = (TableroIG) ois.readObject();
-							mioTab.actualizarTablero(tablero);
-							// Hace cosas
-							while(mioTab.getTurno().equals("Negro")){
+				try (Socket s = ss.accept();) {
+					ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+					ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+					boolean partidaTrminada = false;
+					TableroIG tablero;
+					TableroIG mioTab = new TableroIG();
+					while (partidaTrminada == false) {
+						tablero = (TableroIG) ois.readObject();
+						mioTab.actualizarTablero(tablero);
+						// Hace cosas
+						while (mioTab.getTurno().equals("Negro")) {
 
-							}
-							oos.writeObject(mioTab);
 						}
-
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
+						oos.writeObject(mioTab);
 					}
+
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -82,15 +81,15 @@ public class Cliente {
 			ip = entrada.nextLine();
 			System.out.println("Introduzca su puerto:");
 			int puerto = entrada.nextInt();
-			try (Socket sMio = new Socket(ip, puerto);
-					ObjectInputStream ois = new ObjectInputStream(sMio.getInputStream());
-					ObjectOutputStream oos = new ObjectOutputStream(sMio.getOutputStream())) {
-
+			try (Socket sMio = new Socket(ip, puerto)){
+				ObjectInputStream ois = new ObjectInputStream(sMio.getInputStream());
+				ObjectOutputStream oos = new ObjectOutputStream(sMio.getOutputStream());
 				boolean partidaTrminada = false;
 				TableroIG tablero;
+				TableroIG mioTab = new TableroIG();
 				while (partidaTrminada == false) {
 					// Hace cosas
-					while(mioTab.getTurno().equals("Blanco")){
+					while (mioTab.getTurno().equals("Blanco")) {
 
 					}
 					oos.writeObject(mioTab);
