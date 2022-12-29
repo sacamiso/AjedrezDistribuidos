@@ -48,26 +48,28 @@ public class Cliente {
 
 			try (ServerSocket ss = new ServerSocket(puerto1);) {
 
-				try (Socket s = ss.accept();) {
-					ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-					ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-					boolean partidaTrminada = false;
-					TableroIG tablero;
-					TableroIG mioTab = new TableroIG();
-					while (partidaTrminada == false) {
-						tablero = (TableroIG) ois.readObject();
-						mioTab.actualizarTablero(tablero);
-						// Hace cosas
-						while (mioTab.getTurno().equals("Negro")) {
-
+				while(true){
+					try (Socket s = ss.accept();) {
+						ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+						ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+						boolean partidaTrminada = false;
+						TableroIG tablero;
+						TableroIG mioTab = new TableroIG();
+						while (partidaTrminada == false) {
+							tablero = (TableroIG) ois.readObject();
+							mioTab.actualizarTablero(tablero);
+							// Hace cosas
+							while (mioTab.getTurno().equals("Negro")) {
+	
+							}
+							oos.writeObject(mioTab);
 						}
-						oos.writeObject(mioTab);
+	
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
 
 			} catch (IOException e) {
@@ -75,15 +77,15 @@ public class Cliente {
 			}
 
 		} else {
-			ExecutorService pool2 = Executors.newFixedThreadPool(2);
 			System.out.println("Introduce la ip con la que se desea conectar: ");
 			String ip = entrada.nextLine();
 			ip = entrada.nextLine();
 			System.out.println("Introduzca su puerto:");
 			int puerto = entrada.nextInt();
-			try (Socket sMio = new Socket(ip, puerto)){
-				ObjectInputStream ois = new ObjectInputStream(sMio.getInputStream());
+			try (Socket sMio = new Socket(ip, puerto);
 				ObjectOutputStream oos = new ObjectOutputStream(sMio.getOutputStream());
+				ObjectInputStream ois = new ObjectInputStream(sMio.getInputStream());){
+				
 				boolean partidaTrminada = false;
 				TableroIG tablero;
 				TableroIG mioTab = new TableroIG();
@@ -101,9 +103,7 @@ public class Cliente {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-			} finally {
-				pool2.shutdown();
-			}
+			} 
 
 		}
 	}
