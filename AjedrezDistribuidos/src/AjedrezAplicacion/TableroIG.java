@@ -250,7 +250,7 @@ public class TableroIG implements ActionListener {
         interfaz.add(comp);
 
         interfaz.setLocationRelativeTo(null);
-        interfaz.setPreferredSize(new Dimension(1000, 1000));
+        interfaz.setPreferredSize(new Dimension(600, 600));
         interfaz.setResizable(false);
         interfaz.pack();
         interfaz.setVisible(true);
@@ -264,12 +264,12 @@ public class TableroIG implements ActionListener {
 
         System.out.println(getBotonPosicionString(botones[7][5]));
         System.out.println(getBotonPosicionString(botones[0][5]));
-        System.out.println(getBotonPosicionString(boton("52")));
-        System.out.println(botones[0][3].getY());
-        System.out.println(botones[1][4].getY());
-        System.out.println(botones[0][5].getX());
-        System.out.println(botones[0][6].getX());
-        System.out.println(botones[0][7].getX());
+        // System.out.println(getBotonPosicionString(boton("52")));
+        // System.out.println(botones[0][3].getY());
+        System.out.println(botones[0][4].getY());
+        System.out.println(botones[0][0].getX());
+        System.out.println(botones[0][1].getX());
+        System.out.println(botones[0][2].getX());
     }
 
     public String getTurno() {
@@ -325,7 +325,7 @@ public class TableroIG implements ActionListener {
     }
 
     private String getBotonPosicionString(JButton boton) {
-        String dev = "" + (boton.getY() / 120) + (boton.getX() / 123);
+        String dev = "" + (boton.getY() / 70) + (boton.getX() / 73);
         return dev;
     }
 
