@@ -12,6 +12,8 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.crypto.spec.RC2ParameterSpec;
+
 public class Cliente {
 	public static void main(String[] args) {
 		Scanner entrada = new Scanner(System.in);
@@ -48,23 +50,29 @@ public class Cliente {
 
 			try (ServerSocket ss = new ServerSocket(puerto1);) {
 
-				while(true){
+				while (true) {
 					try (Socket s = ss.accept();) {
-						ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 						ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+						ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 						boolean partidaTrminada = false;
-						TableroIG tablero;
-						TableroIG mioTab = new TableroIG();
+						TableroIG tablero = new TableroIG();
+						TableroIG mioTab = new TableroIG("Negro");
+						mioTab.bloquear();
 						while (partidaTrminada == false) {
-							tablero = (TableroIG) ois.readObject();
-							mioTab.actualizarTablero(tablero);
-							// Hace cosas
+							
+							
+							mioTab.actualizarTablero((TableroIG) ois.readObject());
+							
+							mioTab.desbloquear();
 							while (mioTab.getTurno().equals("Negro")) {
-	
+
 							}
 							oos.writeObject(mioTab);
+							oos.flush();
+							oos.reset();
+							
 						}
-	
+
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -83,27 +91,37 @@ public class Cliente {
 			System.out.println("Introduzca su puerto:");
 			int puerto = entrada.nextInt();
 			try (Socket sMio = new Socket(ip, puerto);
-				ObjectOutputStream oos = new ObjectOutputStream(sMio.getOutputStream());
-				ObjectInputStream ois = new ObjectInputStream(sMio.getInputStream());){
-				
+					ObjectOutputStream oos = new ObjectOutputStream(sMio.getOutputStream());
+					ObjectInputStream ois = new ObjectInputStream(sMio.getInputStream());) {
+
 				boolean partidaTrminada = false;
-				TableroIG tablero;
-				TableroIG mioTab = new TableroIG();
+				TableroIG tablero = new TableroIG();
+				TableroIG mioTab = new TableroIG("Blanco");
+				boolean turno = true;
 				while (partidaTrminada == false) {
 					// Hace cosas
-					while (mioTab.getTurno().equals("Blanco")) {
-
+					turno = true;
+					while (turno) {
+						turno = mioTab.getTurno().equals("Blanco");
+						System.out.println();
 					}
+					mioTab.bloquear();
 					oos.writeObject(mioTab);
+					oos.flush();
+					oos.reset();
+					
 					tablero = (TableroIG) ois.readObject();
+					
 					mioTab.actualizarTablero(tablero);
+					tablero = null;
+					mioTab.desbloquear();
 				}
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-			} 
+			}
 
 		}
 	}

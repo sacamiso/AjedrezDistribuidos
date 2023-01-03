@@ -1,6 +1,8 @@
 package AjedrezAplicacion;
 
-public class Pieza {
+import java.io.Serializable;
+
+public class Pieza implements Serializable{
     private String nombre;
     private String color;
 

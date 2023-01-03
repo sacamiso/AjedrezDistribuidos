@@ -3,15 +3,26 @@ package AjedrezAplicacion;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class TableroIG implements ActionListener {
+public class TableroIG implements ActionListener , Serializable{
     private JFrame interfaz;
     private JPanel panel;
     private static Component comp;
 
     private JButton[][] botones;
+    public JButton[][] getBotones() {
+        return botones;
+    }
+
+    
     private Pieza[][] piezas;
+    public Pieza[][] getPiezas() {
+        return piezas;
+    }
+
+
     private Pieza[][] piezasFuturas;
     private String turno;
     private String jugador;
@@ -39,6 +50,10 @@ public class TableroIG implements ActionListener {
     private int tamX;
     private int diffTamY;
     private int diffTamX;
+
+    public TableroIG(){
+        
+    }
 
     public TableroIG(String player) {
         // Empiezan jugando las blancas
@@ -278,7 +293,7 @@ public class TableroIG implements ActionListener {
     }
 
     public String getTurno() {
-        return turno;
+        return this.turno;
     }
 
     // PERMITE AL CLIENTE DEL OPONENTE OBTENER EL ESTADO DE LA PARTIDA.
@@ -293,10 +308,20 @@ public class TableroIG implements ActionListener {
 
     // ACTUALIZAMOS EL TABLERO
     public void actualizarTablero(TableroIG nuevoTablero) {
-        this.interfaz.remove(comp);
-        this.panel = (JPanel) nuevoTablero.getComp();
-        this.setComp(nuevoTablero.getComp());
-        this.interfaz.add(comp);
+        JButton[][] botaux = nuevoTablero.getBotones();
+        Pieza[][] piezaux = nuevoTablero.getPiezas();
+        // this.interfaz.remove(comp);
+        // this.panel = (JPanel) nuevoTablero.getComp();
+        // this.setComp(nuevoTablero.getComp());
+        // this.interfaz.add(comp);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                this.botones[i][j].setIcon(botaux[i][j].getIcon());
+                this.piezas[i][j] = piezaux[i][j];
+            }
+        }
+
+        this.turno = nuevoTablero.getTurno();
     }
 
     @Override
@@ -322,7 +347,7 @@ public class TableroIG implements ActionListener {
                 } else {
                     this.turno = "Blanco";
                 }
-                //bloquear();              
+                // bloquear();              
                 
             }
         }
@@ -1442,7 +1467,7 @@ public class TableroIG implements ActionListener {
         return arrayPosicionesPosibles;
     }
 
-    private void bloquear(){
+    public void bloquear(){
         for (Component a: this.panel.getComponents()){
             a.setEnabled(false);
         }
