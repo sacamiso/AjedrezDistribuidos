@@ -21,11 +21,11 @@ public class ServidorGeneral {
 					Socket s = ss.accept();
 					DataInputStream dis = new DataInputStream(s.getInputStream());
 					int puerto = dis.readInt();
-					if(!listaUsuarios.containsKey(s.getInetAddress().getHostAddress())) {
+					if (!listaUsuarios.containsKey(s.getInetAddress().getHostAddress())) {
 						listaUsuarios.put(s.getInetAddress().getHostAddress(), puerto);
 					}
-					
-					Atender hilo = new Atender(s,listaUsuarios);
+
+					Atender hilo = new Atender(s, listaUsuarios);
 					pool.execute(hilo);
 
 				} catch (IOException e) {

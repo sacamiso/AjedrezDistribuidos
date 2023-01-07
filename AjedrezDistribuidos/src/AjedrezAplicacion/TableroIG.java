@@ -6,32 +6,21 @@ import java.awt.event.*;
 import java.io.Serializable;
 import java.util.Scanner;
 
-public class TableroIG implements ActionListener , Serializable{
+public class TableroIG implements ActionListener, Serializable {
     private JFrame interfaz;
     private JPanel panel;
     private static Component comp;
 
     private JButton[][] botones;
-    public JButton[][] getBotones() {
-        return botones;
-    }
-
-    
     private Pieza[][] piezas;
-    public Pieza[][] getPiezas() {
-        return piezas;
-    }
 
-
-    private Pieza[][] piezasFuturas;
     private String turno;
-    private String jugador;
+    private String ganador;
 
     private boolean enroqueNegras;
     private boolean enroqueBlancas;
 
     private boolean jaqueMate;
-    private boolean tablas;
 
     private String posicionAntigua = null;
     private String posicionNueva = null;
@@ -51,14 +40,14 @@ public class TableroIG implements ActionListener , Serializable{
     private int diffTamY;
     private int diffTamX;
 
-    public TableroIG(){
-        
+    public TableroIG() {
+
     }
 
     public TableroIG(String player) {
         // Empiezan jugando las blancas
         turno = "Blanco";
-        jugador = player;
+
         // Situamos condiciones iniciales:
         // Blancas y negras pueden hacer enroque
         // Los reyes ni las torres no se han movido
@@ -67,7 +56,6 @@ public class TableroIG implements ActionListener , Serializable{
         enroqueBlancas = true;
 
         jaqueMate = false;
-        tablas = false;
 
         enroqueIzquierdaNegras = true;
         enroqueDerechaBlancas = true;
@@ -185,7 +173,6 @@ public class TableroIG implements ActionListener , Serializable{
 
         piezas[0][3] = new Pieza("Reina", "Negro");
 
-
         imag = new ImageIcon(
 
                 "AjedrezDistribuidos/src/Imagenes/Reina.png");
@@ -252,8 +239,8 @@ public class TableroIG implements ActionListener , Serializable{
             for (int j = 0; j < 8; j++) {
 
                 tableroOriginal.add(botones[i][j]);
-                if(this.piezas[i][j]== null){
-                    this.piezas[i][j] = new Pieza("Vacio","Neutro");
+                if (this.piezas[i][j] == null) {
+                    this.piezas[i][j] = new Pieza("Vacio", "Neutro");
                 }
             }
         }
@@ -278,8 +265,6 @@ public class TableroIG implements ActionListener , Serializable{
         // Ahora creamos las piezas en si mismas y las añadimos a la matriz de las
         // mismas.
 
-        
-
         // PRUEBAS
 
         System.out.println(getBotonPosicionString(botones[7][5]));
@@ -292,10 +277,26 @@ public class TableroIG implements ActionListener , Serializable{
         System.out.println(botones[0][2].getX());
     }
 
+    public JButton[][] getBotones() {
+        return botones;
+    }
+
+    public Pieza[][] getPiezas() {
+        return piezas;
+    }
+
+    public boolean getJaqueMate() {
+        return jaqueMate;
+    }
+
     public String getTurno() {
         return this.turno;
     }
 
+    public String getGanador() {
+        return ganador;
+    }
+    
     // PERMITE AL CLIENTE DEL OPONENTE OBTENER EL ESTADO DE LA PARTIDA.
     public Component getComp() {
         return comp;
@@ -320,7 +321,7 @@ public class TableroIG implements ActionListener , Serializable{
                 this.piezas[i][j] = piezaux[i][j];
             }
         }
-
+        this.jaqueMate = nuevoTablero.getJaqueMate();
         this.turno = nuevoTablero.getTurno();
     }
 
@@ -330,7 +331,6 @@ public class TableroIG implements ActionListener , Serializable{
         JButton s = (JButton) ae.getSource();
 
         this.posicionActual = getBotonPosicionString(s);
-        comprobarJaqueMate();
 
         if (comprobarColorTurno(this.posicionActual)) {
             this.posicionAntigua = this.posicionActual;
@@ -340,22 +340,21 @@ public class TableroIG implements ActionListener , Serializable{
                 cambiarFichas(posicionAntigua, posicionNueva);
                 this.posicionNueva = null;
                 this.posicionAntigua = null;
-             
-                
+
                 if (this.turno.equals("Blanco")) {
                     this.turno = "Negro";
                 } else {
                     this.turno = "Blanco";
                 }
-                // bloquear();              
-                
+                // bloquear();
+
             }
         }
 
     }
 
     private String getBotonPosicionString(JButton boton) {
-        String dev = "" + ((boton.getY()-this.diffTamY) / this.tamY) + ((boton.getX() - this.diffTamX) / this.tamX);
+        String dev = "" + ((boton.getY() - this.diffTamY) / this.tamY) + ((boton.getX() - this.diffTamX) / this.tamX);
         return dev;
     }
 
@@ -399,7 +398,7 @@ public class TableroIG implements ActionListener , Serializable{
         int yN = Character.getNumericValue(posNueva.charAt(0));
 
         this.piezas[yN][xN] = this.piezas[yA][xA];
-        this.piezas[yA][xA] = new Pieza("Vacio","Neutro");
+        this.piezas[yA][xA] = new Pieza("Vacio", "Neutro");
     }
 
     private void cambiarEnPantalla(String posAntigua, String posNueva) {
@@ -448,7 +447,7 @@ public class TableroIG implements ActionListener , Serializable{
             if (xA + 2 == xN) {
                 // Derecha
                 this.piezas[yN][xN - 1] = this.piezas[yN][7];
-                this.piezas[yN][xN + 1] = new Pieza("Vacio","Neutro");
+                this.piezas[yN][xN + 1] = new Pieza("Vacio", "Neutro");
 
                 String posicionTorreAntigua = "" + yN + 7;
                 String posicionTorreNueva = "" + yN + (xN - 1);
@@ -458,7 +457,7 @@ public class TableroIG implements ActionListener , Serializable{
             } else if (xA - 2 == xN) {
                 // Izquierda
                 this.piezas[yN][xA - 1] = this.piezas[yN][0];
-                this.piezas[yN][0] = new Pieza("Vacio","Neutro");
+                this.piezas[yN][0] = new Pieza("Vacio", "Neutro");
 
                 String posicionTorreAntigua = "" + yN + 0;
                 String posicionTorreNueva = "" + yN + (xA - 1);
@@ -469,26 +468,29 @@ public class TableroIG implements ActionListener , Serializable{
         }
     }
 
-    private void comprobarJaqueMate(){
+    public void comprobarJaqueMate() {
         this.jaqueMate = true;
-        for(int i = 0;i<8;i++){
-            for(int j = 0;j<8;j++){
-                String posicion = ""+i+""+j;
-                if(colorFichaDeLaCasilla(this.piezas, i, j).equals(this.turno)){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                String posicion = "" + i + "" + j;
+                if (colorFichaDeLaCasilla(this.piezas, i, j).equals(this.turno)) {
                     String[] movimientosF = movimientosModificados(this.piezas, posicion);
-                    if(movimientosF!=null && !movimientosF[0].equals("")){
+                    if (movimientosF != null && !movimientosF[0].equals("")) {
                         this.jaqueMate = false;
                         break;
                     }
                 }
             }
         }
-        System.out.println(jaqueMate);
-        if(jaqueMate == true){
-            Mate ventana = new Mate(null, true);
-            ventana.setVisible(true);
+
+        if (this.jaqueMate) {
+            if (this.turno.equals("Blanco")) {
+                this.ganador = "Negro";
+            } else {
+                this.ganador = "Blanco";
+            }
         }
-        
+
     }
 
     public String[] movimientosModificados(Pieza[][] tableroM, String posicion) {
@@ -541,7 +543,8 @@ public class TableroIG implements ActionListener , Serializable{
                 posicionesPosibles += "" + (y + 1) + x + "_";
             }
             try {
-                if (tableroM[y + 2][x].getNombre().equals("Vacio") && y == 1 && tableroM[y + 1][x].getNombre().equals("Vacio")) {
+                if (tableroM[y + 2][x].getNombre().equals("Vacio") && y == 1
+                        && tableroM[y + 1][x].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + (y + 2) + (x) + "_";
                 }
             } catch (Exception ex) {
@@ -567,7 +570,8 @@ public class TableroIG implements ActionListener , Serializable{
                 posicionesPosibles += "" + (y - 1) + x + "_";
             }
             try {
-                if (tableroM[y - 2][x].getNombre().equals("Vacio") && y == 6 && tableroM[y - 1][x].getNombre().equals("Vacio")) {
+                if (tableroM[y - 2][x].getNombre().equals("Vacio") && y == 6
+                        && tableroM[y - 1][x].getNombre().equals("Vacio")) {
                     posicionesPosibles += "" + (y - 2) + (x) + "_";
                 }
             } catch (Exception ex) {
@@ -782,7 +786,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento arriba-iaquierda
-            if (tableroM[y - 2][x - 1].getNombre().equals("Vacio") || !colorFichaDeLaCasilla(piezas, y - 2, x - 1).equals(color)) {
+            if (tableroM[y - 2][x - 1].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y - 2, x - 1).equals(color)) {
                 posicionesPosibles += "" + (y - 2) + "" + (x - 1) + "_";
             }
         } catch (Exception ex) {
@@ -790,7 +795,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento arriba-derecha
-            if (tableroM[y - 2][x + 1].getNombre().equals("Vacio")|| !colorFichaDeLaCasilla(piezas, y - 2, x + 1).equals(color)) {
+            if (tableroM[y - 2][x + 1].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y - 2, x + 1).equals(color)) {
                 posicionesPosibles += "" + (y - 2) + "" + (x + 1) + "_";
             }
         } catch (Exception ex) {
@@ -798,7 +804,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento abajo-izquierda
-            if (tableroM[y + 2][x - 1].getNombre().equals("Vacio") || !colorFichaDeLaCasilla(piezas, y + 2, x - 1).equals(color)) {
+            if (tableroM[y + 2][x - 1].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y + 2, x - 1).equals(color)) {
                 posicionesPosibles += "" + (y + 2) + "" + (x - 1) + "_";
             }
         } catch (Exception ex) {
@@ -806,7 +813,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento abajo-derecha
-            if (tableroM[y + 2][x + 1].getNombre().equals("Vacio")|| !colorFichaDeLaCasilla(piezas, y + 2, x + 1).equals(color)) {
+            if (tableroM[y + 2][x + 1].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y + 2, x + 1).equals(color)) {
                 posicionesPosibles += "" + (y + 2) + "" + (x + 1) + "_";
             }
         } catch (Exception ex) {
@@ -814,7 +822,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento izquierda-arriba
-            if (tableroM[y - 1][x - 2].getNombre().equals("Vacio") || !colorFichaDeLaCasilla(piezas, y - 1, x - 2).equals(color)) {
+            if (tableroM[y - 1][x - 2].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y - 1, x - 2).equals(color)) {
                 posicionesPosibles += "" + (y - 1) + "" + (x - 2) + "_";
             }
         } catch (Exception ex) {
@@ -822,7 +831,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento izquierda-abajo
-            if (tableroM[y + 1][x - 2].getNombre().equals("Vacio") || !colorFichaDeLaCasilla(piezas, y + 1, x - 2).equals(color)) {
+            if (tableroM[y + 1][x - 2].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y + 1, x - 2).equals(color)) {
                 posicionesPosibles += "" + (y + 1) + "" + (x - 2) + "_";
             }
         } catch (Exception ex) {
@@ -830,7 +840,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento derecha-arriba
-            if (tableroM[y - 1][x + 2].getNombre().equals("Vacio") || !colorFichaDeLaCasilla(piezas, y - 1, x + 2).equals(color)) {
+            if (tableroM[y - 1][x + 2].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y - 1, x + 2).equals(color)) {
                 posicionesPosibles += "" + (y - 1) + "" + (x + 2) + "_";
             }
         } catch (Exception ex) {
@@ -838,7 +849,8 @@ public class TableroIG implements ActionListener , Serializable{
 
         try {
             // Movimiento derecha-abajo
-            if (tableroM[y + 1][x + 2].getNombre().equals("Vacio") || !colorFichaDeLaCasilla(piezas, y + 1, x + 2).equals(color)) {
+            if (tableroM[y + 1][x + 2].getNombre().equals("Vacio")
+                    || !colorFichaDeLaCasilla(piezas, y + 1, x + 2).equals(color)) {
                 posicionesPosibles += "" + (y + 1) + "" + (x + 2) + "_";
             }
         } catch (Exception ex) {
@@ -934,16 +946,18 @@ public class TableroIG implements ActionListener , Serializable{
 
         // Enrroque
         if (color.equals("Blanco") && this.enroqueBlancas == true) {
-            if (tableroM[7][1].getNombre().equals("Vacio")&& tableroM[7][2].getNombre().equals("Vacio") && tableroM[7][3].getNombre().equals("Vacio")
+            if (tableroM[7][1].getNombre().equals("Vacio") && tableroM[7][2].getNombre().equals("Vacio")
+                    && tableroM[7][3].getNombre().equals("Vacio")
                     && this.enroqueIzquierdaBlancas == true) {
                 posicionesPosibles += "" + "72" + "_";
             }
-            if (tableroM[7][5].getNombre().equals("Vacio")&& tableroM[7][6].getNombre().equals("Vacio")
+            if (tableroM[7][5].getNombre().equals("Vacio") && tableroM[7][6].getNombre().equals("Vacio")
                     && this.enroqueDerechaBlancas == true) {
                 posicionesPosibles += "" + "76" + "_";
             }
         } else if (color.equals("Negro") && this.enroqueNegras == true) {
-            if (tableroM[0][1].getNombre().equals("Vacio") && tableroM[0][2].getNombre().equals("Vacio") && tableroM[0][3].getNombre().equals("Vacio")
+            if (tableroM[0][1].getNombre().equals("Vacio") && tableroM[0][2].getNombre().equals("Vacio")
+                    && tableroM[0][3].getNombre().equals("Vacio")
                     && this.enroqueIzquierdaNegras == true) {
                 posicionesPosibles += "" + "02" + "_";
             }
@@ -977,7 +991,7 @@ public class TableroIG implements ActionListener , Serializable{
                     copiarTableroPrimeroAlSegundo(tableroFuturo, tableroM);
 
                     tableroM[yFinal][xFinal] = tableroM[yInicial][xInicial];
-                    tableroM[yInicial][xInicial] = new Pieza("Vacio","Neutro");
+                    tableroM[yInicial][xInicial] = new Pieza("Vacio", "Neutro");
 
                     if (reyEnJaque(colorFichaDeLaCasilla(this.piezas, yInicial, xInicial), tableroM) == false) {
                         posicionesDefinitivas += "" + yFinal + "" + xFinal + "_";
@@ -1467,26 +1481,26 @@ public class TableroIG implements ActionListener , Serializable{
         return arrayPosicionesPosibles;
     }
 
-    public void bloquear(){
-        for (Component a: this.panel.getComponents()){
+    public void bloquear() {
+        for (Component a : this.panel.getComponents()) {
             a.setEnabled(false);
         }
     }
 
-    public void desbloquear(){
-        for (Component a: this.panel.getComponents()){
+    public void desbloquear() {
+        for (Component a : this.panel.getComponents()) {
             a.setEnabled(true);
         }
     }
 
-    public void resolverTamaños(){
-        
-        //Tamaño Y
-        this.diffTamY= botones[0][0].getY();
-        this.tamY = botones[1][0].getY() -botones[0][0].getY();
+    public void resolverTamaños() {
 
-        //Tamaño X
-        this.diffTamX= botones[0][0].getX();
+        // Tamaño Y
+        this.diffTamY = botones[0][0].getY();
+        this.tamY = botones[1][0].getY() - botones[0][0].getY();
+
+        // Tamaño X
+        this.diffTamX = botones[0][0].getX();
         this.tamX = botones[0][1].getX() - botones[0][0].getX();
     }
 }

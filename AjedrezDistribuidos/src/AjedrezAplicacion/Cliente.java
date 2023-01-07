@@ -59,20 +59,34 @@ public class Cliente {
 						TableroIG mioTab = new TableroIG("Negro");
 						mioTab.bloquear();
 						while (partidaTrminada == false) {
-							
-							
+
 							mioTab.actualizarTablero((TableroIG) ois.readObject());
-							
-							mioTab.desbloquear();
-							while (mioTab.getTurno().equals("Negro")) {
+							if (mioTab.getJaqueMate()) {
+								partidaTrminada = true;
+							} else {
+								mioTab.desbloquear();
+								while (mioTab.getTurno().equals("Negro")) {
 
+								}
+								mioTab.comprobarJaqueMate();
+								mioTab.bloquear();
+								oos.writeObject(mioTab);
+								oos.flush();
+								oos.reset();
+
+								if (mioTab.getJaqueMate()) {
+									partidaTrminada = true;
+								}
 							}
-							oos.writeObject(mioTab);
-							oos.flush();
-							oos.reset();
-							
 						}
-
+						System.out.println("He salido del negro");
+						if (mioTab.getGanador() != null && mioTab.getGanador().equals("Negro")) {
+							Mate ventana = new Mate(null, true, "ganador");
+							ventana.setVisible(true);
+						} else {
+							Mate ventana = new Mate(null, true, "perdedor");
+							ventana.setVisible(true);
+						}
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -99,22 +113,40 @@ public class Cliente {
 				TableroIG mioTab = new TableroIG("Blanco");
 				boolean turno = true;
 				while (partidaTrminada == false) {
-					// Hace cosas
+
 					turno = true;
 					while (turno) {
 						turno = mioTab.getTurno().equals("Blanco");
 						System.out.println();
 					}
+					mioTab.comprobarJaqueMate();
 					mioTab.bloquear();
 					oos.writeObject(mioTab);
 					oos.flush();
 					oos.reset();
-					
-					tablero = (TableroIG) ois.readObject();
-					
-					mioTab.actualizarTablero(tablero);
-					tablero = null;
-					mioTab.desbloquear();
+
+					if (mioTab.getJaqueMate()) {
+						partidaTrminada = true;
+					} else {
+						tablero = (TableroIG) ois.readObject();
+						mioTab.actualizarTablero(tablero);
+						if (mioTab.getJaqueMate()) {
+							partidaTrminada = true;
+						} else {
+							tablero = null;
+							mioTab.desbloquear();
+						}
+
+					}
+
+				}
+				System.out.println("He salido del blanco");
+				if (mioTab.getGanador() != null && mioTab.getGanador().equals("Blanco")) {
+					Mate ventana = new Mate(null, true, "ganador");
+					ventana.setVisible(true);
+				} else {
+					Mate ventana = new Mate(null, true, "perdedor");
+					ventana.setVisible(true);
 				}
 
 			} catch (IOException e) {
