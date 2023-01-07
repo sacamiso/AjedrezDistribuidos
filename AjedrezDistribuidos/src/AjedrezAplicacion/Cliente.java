@@ -28,10 +28,7 @@ public class Cliente {
 
 				dos.writeInt(puerto1);
 				dos.flush();
-				ObjectInputStream in = new ObjectInputStream(s.getInputStream()); // Hay que cerrarlo pero no tengo muy
-																					// claro como hacerlo, está abierto
-																					// ahi porque si no se generaba un
-																					// bloqueo
+				ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 				HashMap<String, Integer> lista = (HashMap<String, Integer>) in.readObject();
 				System.out.println(lista.toString());
 				s.close();
