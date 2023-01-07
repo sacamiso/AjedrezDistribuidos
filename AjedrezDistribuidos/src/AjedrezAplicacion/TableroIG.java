@@ -1,3 +1,5 @@
+// CREADO POR: SARA CAMISÓN PERAITA Y FIDEL RUIZ ALCORTA.
+
 package AjedrezAplicacion;
 
 import java.awt.*;
