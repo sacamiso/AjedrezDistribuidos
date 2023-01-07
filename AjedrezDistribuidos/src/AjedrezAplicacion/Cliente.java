@@ -79,7 +79,7 @@ public class Cliente {
 								}
 							}
 						}
-						System.out.println("He salido del negro");
+						
 						if (mioTab.getGanador() != null && mioTab.getGanador().equals("Negro")) {
 							Mate ventana = new Mate(null, true, "ganador");
 							ventana.setVisible(true);
@@ -140,7 +140,7 @@ public class Cliente {
 					}
 
 				}
-				System.out.println("He salido del blanco");
+				
 				if (mioTab.getGanador() != null && mioTab.getGanador().equals("Blanco")) {
 					Mate ventana = new Mate(null, true, "ganador");
 					ventana.setVisible(true);

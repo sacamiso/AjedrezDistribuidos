@@ -265,16 +265,6 @@ public class TableroIG implements ActionListener, Serializable {
         // Ahora creamos las piezas en si mismas y las añadimos a la matriz de las
         // mismas.
 
-        // PRUEBAS
-
-        System.out.println(getBotonPosicionString(botones[7][5]));
-        System.out.println(getBotonPosicionString(botones[0][5]));
-        // System.out.println(getBotonPosicionString(boton("52")));
-        // System.out.println(botones[0][3].getY());
-        System.out.println(botones[0][4].getY());
-        System.out.println(botones[0][0].getX());
-        System.out.println(botones[0][1].getX());
-        System.out.println(botones[0][2].getX());
     }
 
     public JButton[][] getBotones() {
@@ -296,7 +286,7 @@ public class TableroIG implements ActionListener, Serializable {
     public String getGanador() {
         return ganador;
     }
-    
+
     // PERMITE AL CLIENTE DEL OPONENTE OBTENER EL ESTADO DE LA PARTIDA.
     public Component getComp() {
         return comp;
@@ -418,14 +408,16 @@ public class TableroIG implements ActionListener, Serializable {
                 eleccionDePeon();
                 this.piezas[0][i] = fichaElegida;
                 String posicion = "0" + i;
-                boton(posicion).setIcon(imagenElegida);
+                ImageIcon imag2 = new ImageIcon(imagenElegida.getImage().getScaledInstance(85, 85, Image.SCALE_DEFAULT));
+                boton(posicion).setIcon(imag2);
             }
 
             if (this.piezas[7][i].getNombre().equals("Peon")) {
                 eleccionDePeon();
                 this.piezas[7][i] = fichaElegida;
                 String posicion = "7" + i;
-                boton(posicion).setIcon(imagenElegida);
+                ImageIcon imag2 = new ImageIcon(imagenElegida.getImage().getScaledInstance(85, 85, Image.SCALE_DEFAULT));
+                boton(posicion).setIcon(imag2);
             }
         }
     }
